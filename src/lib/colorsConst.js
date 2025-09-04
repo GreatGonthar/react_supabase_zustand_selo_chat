@@ -1,0 +1,9 @@
+export const mainButton = "#4B2E2B"; // Тёмно-коричневый
+export const authButton = "#7B3F2F"; // Терракотовый
+export const secondaryElement = "#D8C9A8"; // Лен
+export const mainText = "#F5E6D3"; // Кремовый
+export const secondaryText = "#EDE0C8"; // Светло-бежевый
+export const secondaryText2 = "#C2B5A3"; // Серо-бежевый
+export const links = "#aa7f52";
+export const logo = "#2E1C1B"; // Угольный
+export const hover = "#A0522D"; // Осветлённый терракотовый

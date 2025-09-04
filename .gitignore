@@ -1,3 +1,6 @@
+# Исключаем папку public
+/public/
+
 # Logs
 logs
 *.log
