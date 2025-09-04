@@ -7,8 +7,8 @@ import { supabase } from "../lib/supabase";
 export const signInWithGoogle = async (setLoading) => {
 	const provider = new GoogleAuthProvider();
 	await supabase.auth.signInWithPassword({
-		email: "fggihllsaorccq6@gmail.com",
-		password: "Peda_255_gog_Supa",
+		email: import.meta.env.VITE_SUPABASE_EMAIL,
+		password: import.meta.env.VITE_SUPABASE_PASSWORD,
 	});
 	try {
 		// Вход с помощью всплывающего окна
