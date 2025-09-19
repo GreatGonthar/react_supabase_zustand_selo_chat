@@ -6,6 +6,7 @@ import { useAuthUserStore } from "../../../lib/zustand";
 import { NavLink } from "react-router-dom";
 import { authButton, hover } from "../../../lib/colorsConst";
 import { handleGoogleAuth } from "../../../lib/handleGoogleAuth";
+import vintageVillage from "../../../../public/img/Vintage_village.jpg";
 
 const Header = () => {
 	const [openMenu, setOpenMenu] = useState(false);
@@ -19,7 +20,7 @@ const Header = () => {
 			<AppBar
 				position="fixed"
 				sx={{
-					backgroundImage: "url(../public/img/Vintage_village.jpg)",
+					backgroundImage: `url(${vintageVillage})`,
 					backgroundSize: "cover",
 					backgroundRepeat: "no-repeat",
 					color: hover,

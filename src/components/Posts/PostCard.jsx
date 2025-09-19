@@ -36,6 +36,7 @@ import { delMessage } from "../../lib/supabaseUtils";
 import useCommentCountSubscribe from "../../lib/supabaseSubscribers/useCommentCountSubscribe";
 import useCommentSubscribe from "../../lib/supabaseSubscribers/useCommentSubscribe";
 import LikesCountButton from "./LikesCountButton";
+import lightWood from "../../../public/img/light_wood.jpg";
 
 const BoardCard = ({ item, type }) => {
 	const { authUser } = useAuthUserStore();
@@ -107,7 +108,7 @@ const BoardCard = ({ item, type }) => {
 		<Card
 			sx={{
 				mb: 1,
-				backgroundImage: "url(../public/img/light_wood.jpg)",
+				backgroundImage: `url(${lightWood})`,
 				// backgroundSize: "cover",
 				backgroundPosition: "center",
 				backgroundRepeat: "repeat",
