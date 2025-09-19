@@ -14,4 +14,7 @@ export default defineConfig({
 		host: "localhost", // Разрешаем доступ с других устройств
 		port: 5173,
 	},
+	build: {
+		outDir: "dist",
+	},
 });
