@@ -30,7 +30,7 @@ import MessageContent from "../MessagesPage/MessageContent";
 import { useEffect, useRef, useState } from "react";
 
 import CommentBox from "./CommentBox";
-import { FetchLikesCount } from "./fetchLikesCount";
+import FetchLikesCount from "./fetchLikesCount";
 
 import { delMessage } from "../../lib/supabaseUtils";
 import useCommentCountSubscribe from "../../lib/supabaseSubscribers/useCommentCountSubscribe";

@@ -7,7 +7,7 @@ import { red } from "@mui/material/colors";
 import { usePostsStore } from "../../lib/zustand";
 
 // Функция для загрузки общего количества лайков
-export const FetchLikesCount = ({ post_id, currentUserId = false }) => {
+const FetchLikesCount = ({ post_id, currentUserId = false }) => {
 	const [userReaction, setUserReaction] = useState(null); // null, 'like' или 'dislike'
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -234,3 +234,4 @@ export const FetchLikesCount = ({ post_id, currentUserId = false }) => {
 		</>
 	);
 };
+export default FetchLikesCount;
