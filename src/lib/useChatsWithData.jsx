@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 import { useChatsParticipantsStore } from "./zustand";
 
 export const useChatsWithData = (userId) => {
-	// const [chats, setChats] = useState(null);
+	// получаем чаты пользователя без сообщений
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const { chatsParticipants, setChatsParticipants } = useChatsParticipantsStore();

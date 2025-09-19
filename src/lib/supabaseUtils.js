@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { supabase } from "./supabase";
 import imageCompression from "browser-image-compression";
 
 const findExistingChat = async (user1Id, user2Id) => {
@@ -31,24 +31,56 @@ export const createChat = async (senderId, receiverId) => {
 	return chatId;
 };
 
-export const sendMessage = async (chatId = null, senderId, messageText, img = "") => {
+export const sendMessage = async (type, typeId = null, senderId, messageText, img = "") => {
 	// Отправляем сообщение
-	if (chatId) {
-		const { error } = await supabase.from("messages").insert({
-			chat_id: chatId,
-			sender_id: senderId,
-			content: messageText,
-			imgurl: img,
-		});
-		if (error) throw error;
-		return chatId;
-	} else {
-		const { error } = await supabase.from("posts").insert({
-			user_id: senderId,
-			content: messageText,
-			imgurl: img,
-		});
-		if (error) throw error;
+
+	switch (type) {
+		case "chat":
+			const { data: chatData, error: chatError } = await supabase
+				.from("messages")
+				.insert({
+					chat_id: typeId,
+					sender_id: senderId,
+					content: messageText,
+					imgurl: img,
+				})
+				.select("id") // Возвращаем ID вставленной записи
+				.single();
+
+			if (chatError) throw chatError;
+			return chatData.id; // Возвращаем ID сообщения
+
+		case "post":
+			const { data: postData, error: postError } = await supabase
+				.from("posts")
+				.insert({
+					user_id: senderId,
+					content: messageText,
+					imgurl: img,
+				})
+				.select("id")
+				.single();
+
+			if (postError) throw postError;
+			return postData.id; // Возвращаем ID поста
+
+		case "comment":
+			const { data: commentData, error: commentError } = await supabase
+				.from("comments")
+				.insert({
+					post_id: typeId, // ID поста, к которому комментарий
+					user_id: senderId,
+					content: messageText,
+					imgurl: img,
+				})
+				.select("id")
+				.single();
+
+			if (commentError) throw commentError;
+			return commentData.id; // Возвращаем ID комментария
+
+		default:
+			throw new Error(`Unknown type: ${type}`);
 	}
 };
 
@@ -94,24 +126,7 @@ export const sendImg = async (userId, file) => {
 		return publicUrl; // или просто data.path, если bucket приватный
 	}
 };
-export const delMessage = async (messageId) => {
-	try {
-		const { error } = await supabase
-			.from("messages") // название вашей таблицы
-			.delete()
-			.eq("id", messageId); // условие: где id = messageId
-
-		if (error) throw error;
-
-		console.log(`Сообщение успешно удалено`);
-		return true;
-	} catch (error) {
-		console.error("Ошибка при удалении сообщения:", error);
-		return false;
-	}
-};
-
-export const delImg = async (url) => {
+const delImg = async (url) => {
 	console.log(url);
 	const extractFilePathFromUrl = (imgUrl) => {
 		// Разбиваем URL на части
@@ -146,5 +161,58 @@ export const delImg = async (url) => {
 		}
 	} catch (err) {
 		console.error("Failed to delete file:", err);
+	}
+};
+export const delMessage = async (type, message) => {
+	console.log("message", message);
+	if (message.imgurl) {
+		delImg(message.imgurl);
+	}
+	switch (type) {
+		case "chat":
+			try {
+				const { error } = await supabase
+					.from("messages") // название вашей таблицы
+					.delete()
+					.eq("id", message.id); // условие: где id = messageId
+
+				if (error) throw error;
+
+				console.log(`Сообщение успешно удалено`);
+				return true;
+			} catch (error) {
+				console.error("Ошибка при удалении сообщения:", error);
+				return false;
+			}
+		case "post":
+			try {
+				const { error } = await supabase
+					.from("posts") // название вашей таблицы
+					.delete()
+					.eq("id", message.id); // условие: где id = messageId
+
+				if (error) throw error;
+
+				console.log(`пост ${message.id} успешно удален`);
+				return true;
+			} catch (error) {
+				console.error("Ошибка при удалении поста:", error);
+				return false;
+			}
+		case "comment":
+			try {
+				const { error } = await supabase
+					.from("comments") // название вашей таблицы
+					.delete()
+					.eq("id", message.id); // условие: где id = messageId
+
+				if (error) throw error;
+
+				console.log(`коммент ${message.id} успешно удален`);
+				return true;
+			} catch (error) {
+				console.error("Ошибка при удалении коммента:", error);
+				return false;
+			}
 	}
 };

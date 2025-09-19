@@ -4,8 +4,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MenuNavigate from "../MenuNavigate/MenuNavigate";
 import { useAuthUserStore } from "../../../lib/zustand";
 import { NavLink } from "react-router-dom";
-import { useFetchUsersFromSupabase } from "../../../lib/useFetchUsersFromSupabase";
-import { authButton, hover, logo } from "../../../lib/colorsConst";
+import { authButton, hover } from "../../../lib/colorsConst";
+import { handleGoogleAuth } from "../../../lib/handleGoogleAuth";
 
 const Header = () => {
 	const [openMenu, setOpenMenu] = useState(false);
@@ -19,7 +19,7 @@ const Header = () => {
 			<AppBar
 				position="fixed"
 				sx={{
-					backgroundImage: "url(../public/Vintage_village.jpg)",
+					backgroundImage: "url(../public/img/Vintage_village.jpg)",
 					backgroundSize: "cover",
 					backgroundRepeat: "no-repeat",
 					color: hover,
@@ -44,18 +44,16 @@ const Header = () => {
 							<Avatar alt="user" src={authUser.user_metadata.avatar_url} />
 						</NavLink>
 					) : (
-						<Button color="inherit">
-							<NavLink
-								to={`/login`}
-								style={{
-									textDecoration: "none",
+						<Button color="inherit" onClick={handleGoogleAuth}>
+							<Typography
+								sx={{
 									color: authButton,
 									fontWeight: 600,
 									textShadow: "1px 1px 1px rgba(0,0,0,0.5)",
 								}}
 							>
 								login
-							</NavLink>
+							</Typography>
 						</Button>
 					)}
 				</Toolbar>

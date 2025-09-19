@@ -1,25 +1,15 @@
 import { Grid, Avatar, Typography, Card, CardHeader, Button } from "@mui/material";
-import { useAuthUserStore, useChangeUserStore, useUsersStore } from "../../lib/zustand";
-import { NavLink, useNavigate } from "react-router-dom";
-import { supabase } from "../../lib/supabase";
-import { useEffect } from "react";
-import { useFetchUsersFromSupabase } from "../../lib/useFetchUsersFromSupabase";
-import {
-	secondaryElement,
-	authButton,
-	mainButton,
-	mainText,
-	secondaryText,
-	secondaryText2,
-} from "../../lib/colorsConst";
+import { useAuthUserStore, useUsersStore } from "../../lib/zustand";
+import { useNavigate } from "react-router-dom";
+
+import { mainButton, mainText, secondaryText2 } from "../../lib/colorsConst";
 
 const UsersListPage = () => {
-	const { users, setUsers } = useUsersStore();
-	const { setChangeUser } = useChangeUserStore();
-	const { authUser, setAuthUser } = useAuthUserStore();
+	const { users } = useUsersStore();
+
+	const { authUser } = useAuthUserStore();
 	const navigate = useNavigate();
 	const handleNavigate = (user) => {
-		setChangeUser(user);
 		navigate(`/user/${user.id}`);
 	};
 	console.log("authUser:", authUser);
@@ -38,22 +28,16 @@ const UsersListPage = () => {
 									color: "white",
 									borderRadius: 4,
 								}}
+								onClick={() => handleNavigate(user)}
 							>
 								<CardHeader
 									avatar={
-										// <NavLink
-										// 	to={`/user/${user.google_id}`}
-										// 	style={{ textDecoration: "none", color: "white", fontWeight: 600 }}
-										// >
-										<Button onClick={() => handleNavigate(user)}>
-											<Avatar
-												alt="user"
-												variant="square"
-												src={user.avatar_url}
-												sx={{ width: 64, height: 64 }}
-											/>
-										</Button>
-										//</NavLink>
+										<Avatar
+											alt="user"
+											variant="square"
+											src={user.avatar_url}
+											sx={{ width: 64, height: 64 }}
+										/>
 									}
 									title={
 										<Typography variant="subtitle1" sx={{ color: mainText }}>

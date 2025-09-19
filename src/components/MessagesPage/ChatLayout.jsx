@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import ChatInterface from "./ChatInterface";
+import MessagesContainer from "./MessagesContainer";
 import MessageInput from "./MessageInput";
 import ImagePreview from "./ImagePreview";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
-const ChatPage = () => {
+const ChatLayout = () => {
 	const chatId = useParams().params;
 
 	return (
 		<Box>
-			<ChatInterface chatId={chatId} />
+			<MessagesContainer chatId={chatId} />
 
-			<MessageInput chatId={chatId} />
+			<MessageInput type="chat" chatId={chatId} />
 		</Box>
 	);
 };
 
-export default ChatPage;
+export default ChatLayout;

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { useUsersStore } from "./zustand";
+import { supabase } from "../supabase";
+import { useUsersStore } from "../zustand";
 
-export const useFetchUsersFromSupabase = () => {
+export const useUsersSubscribe = () => {
 	const { users, setUsers } = useUsersStore();
 	// const [usersSupabase, setUsersSupabase] = useState([]); // Укажите правильный тип вместо any
 	const [loading, setLoading] = useState(true);

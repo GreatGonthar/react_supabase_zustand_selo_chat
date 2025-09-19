@@ -17,9 +17,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { styled, useTheme } from "@mui/material/styles";
 import { useAuthUserStore } from "../../../lib/zustand";
 import { hover } from "../../../lib/colorsConst";
+import homeIcon from "../../../../public/img/icons/home.png";
+import userIcon from "../../../../public/img/icons/user.png";
+import carrotIcon from "../../../../public/img/icons/carrot.png";
+import wallIcon from "../../../../public/img/icons/wall.png";
+import cowIcon from "../../../../public/img/icons/cow.png";
+import traktorIcon from "../../../../public/img/icons/traktor.png";
 
-const NavigateLink = ({ text, url }) => {
-	const theme = useTheme();
+const NavigateLink = ({ text, url, icon }) => {
 	return (
 		<NavLink to={`/${url}`} style={{ textDecoration: "none", color: "black" }}>
 			{({ isActive }) => (
@@ -28,10 +33,26 @@ const NavigateLink = ({ text, url }) => {
 					disablePadding
 					sx={{
 						backgroundColor: isActive ? hover : "transparent",
+						mr: 5,
 					}}
 				>
 					<ListItemButton>
-						<ListItemIcon>{isActive ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+						<ListItemIcon
+							sx={{
+								minWidth: "auto", // Важно! Отключаем фиксированную min-width от MUI
+								mr: 1.5, // Или используйте значение меньше стандартного. 1 = 8px, 0.5 = 4px
+								// mr: 0.5, // Попробуйте это значение для еще меньшего отступа
+							}}
+						>
+							<img
+								src={icon}
+								alt={"icon"}
+								style={{
+									width: "24px", // Задаем финальный размер, который должен быть в интерфейсе
+									height: "24px",
+								}}
+							/>
+						</ListItemIcon>
 						<ListItemText primary={text} />
 					</ListItemButton>
 				</ListItem>
@@ -41,10 +62,7 @@ const NavigateLink = ({ text, url }) => {
 };
 const MenuNavigate = ({ setOpenMenu, openMenu }) => {
 	const { authUser } = useAuthUserStore();
-	const navigate = useNavigate();
 	const theme = useTheme();
-	const blockMenu1 = ["Home", "User", "Users", "Messages", "Chat(toDo)"];
-	const blockMenu2 = ["LogIn/LogOut"];
 	const DrawerHeader = styled("div")(({ theme }) => ({
 		display: "flex",
 		alignItems: "center",
@@ -53,7 +71,18 @@ const MenuNavigate = ({ setOpenMenu, openMenu }) => {
 		justifyContent: "flex-end",
 	}));
 	return (
-		<Drawer open={openMenu} onClose={() => setOpenMenu(false)} variant="temporary" transitionDuration={1000}>
+		<Drawer
+			open={openMenu}
+			onClose={() => setOpenMenu(false)}
+			variant="temporary"
+			transitionDuration={1000}
+			PaperProps={{
+				sx: {
+					backgroundColor: "#D8C6A5",
+				},
+			}}
+			sx={{ m: 10 }}
+		>
 			<Box>
 				<DrawerHeader>
 					<IconButton onClick={() => setOpenMenu(false)}>
@@ -62,14 +91,13 @@ const MenuNavigate = ({ setOpenMenu, openMenu }) => {
 				</DrawerHeader>
 				<Divider />
 				<List onClick={() => setOpenMenu(false)}>
-					<NavigateLink text={"Home"} url={""} />
-					{authUser ? <NavigateLink text={"User"} url={`user/${authUser.id}`} /> : false}
-					<NavigateLink text={"Users"} url={"users"} />
+					<NavigateLink text={"Домой"} url={""} icon={homeIcon} />
+					{authUser ? <NavigateLink text={"Селянин"} url={`user/${authUser.id}`} icon={userIcon} /> : false}
+					<NavigateLink text={"Селяне"} url={"users"} icon={carrotIcon} />
 
-					{authUser ? <NavigateLink text={"Chats"} url={"chats"} /> : false}
-					<NavigateLink text={"Public"} url={"public"} />
+					{authUser ? <NavigateLink text={"Общение"} url={"chats"} icon={cowIcon} /> : false}
+					<NavigateLink text={"Посты"} url={"public"} icon={traktorIcon} />
 					<Divider />
-					<NavigateLink text={"LogIn/LogOut"} url={"login"} />
 				</List>
 			</Box>
 		</Drawer>

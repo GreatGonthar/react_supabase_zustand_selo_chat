@@ -1,4 +1,4 @@
-import BoardCard from "./BoardCard";
+import PostCard from "./PostCard";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
@@ -7,20 +7,20 @@ import MessageInput from "../MessagesPage/MessageInput";
 import { Dialog, DialogContent } from "@mui/material";
 
 import { useAuthUserStore, usePostsStore } from "../../lib/zustand";
-import { useFetchPostsFromSupabase } from "../../lib/useFetchPostsFromSupabase";
+import { usePostsSubscribe } from "../../lib/supabaseSubscribers/usePostsSubscribe";
 import { authButton, mainButton, mainText, secondaryElement } from "../../lib/colorsConst";
 
-const BoardMessages = () => {
+const PostMessages = () => {
 	const [openMessageInput, setOpenMessageInput] = useState(false);
 	const { authUser } = useAuthUserStore();
-	useFetchPostsFromSupabase();
+	usePostsSubscribe();
 	const { posts } = usePostsStore();
 
 	const reversePosts = [...posts].reverse();
 	return (
 		<>
 			{reversePosts.map((item) => {
-				return <BoardCard item={item} key={item.id} />;
+				return <PostCard item={item} type={"post"} key={item.id} />;
 			})}
 
 			{authUser && (
@@ -45,11 +45,11 @@ const BoardMessages = () => {
 
 			<Dialog open={openMessageInput} onClose={() => setOpenMessageInput(false)}>
 				<DialogContent sx={{ background: mainButton, p: 0 }}>
-					<MessageInput setOpenMessageInput={setOpenMessageInput} />
+					<MessageInput type={"post"} setOpenMessageInput={setOpenMessageInput} />
 				</DialogContent>
 			</Dialog>
 		</>
 	);
 };
 
-export default BoardMessages;
+export default PostMessages;

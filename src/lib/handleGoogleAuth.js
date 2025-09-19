@@ -32,7 +32,7 @@ export const handleLogout = async () => {
 		sessionStorage.removeItem("sb-auth-token");
 
 		// 3. Перенаправление
-		window.location.href = "/login"; // Или другая целевая страница
+		window.location.href = "/public"; // Или другая целевая страница
 
 		if (error) throw error;
 	} catch (err) {

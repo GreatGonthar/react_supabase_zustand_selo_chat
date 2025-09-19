@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { useChatsStore } from "./zustand";
+import { supabase } from "../supabase";
+import { useChatsStore } from "../zustand";
 
-export const useFetchMessagesFromSupabase = (chatId) => {
+export const useMessagesSubscribe = (chatId) => {
 	const { setMessages, addMessage, removeMessage } = useChatsStore();
 
 	useEffect(() => {

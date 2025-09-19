@@ -7,3 +7,5 @@ export const secondaryText2 = "#C2B5A3"; // Серо-бежевый
 export const links = "#aa7f52";
 export const logo = "#2E1C1B"; // Угольный
 export const hover = "#A0522D"; // Осветлённый терракотовый
+export const cozyEmeraldGreen = "#284139";
+export const cozyCreasedKhaki = "#f8d794";

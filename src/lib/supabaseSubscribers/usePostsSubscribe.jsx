@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { usePostsStore } from "./zustand";
+import { supabase } from "../supabase";
+import { usePostsStore } from "../zustand";
 
-export const useFetchPostsFromSupabase = () => {
+export const usePostsSubscribe = () => {
 	const { setPosts, addPost, updatePost, removePost } = usePostsStore();
 	useEffect(() => {
 		// 1. Загрузка начальных сообщений
 		const fetchInitialPosts = async () => {
 			const { data, error } = await supabase.from("posts").select("*").order("created_at", { ascending: true });
-
+			console.log("загрузили посты", data);
 			if (!error && data) {
 				setPosts(data);
 			}

@@ -28,7 +28,7 @@ const MessageContent = ({ message, color = "black" }) => {
 			{message.imgurl && (
 				<img
 					src={message.imgurl}
-					alt="message attachment"
+					alt="картинка"
 					style={{ maxWidth: "100%", height: "auto", marginBottom: "8px" }}
 				/>
 			)}

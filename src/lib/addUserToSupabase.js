@@ -9,11 +9,13 @@ export const safeAddUserToSupabase = async (userData) => {
 		.select();
 
 	if (error) {
-		toast.error(`пользователь ${userData.username} уже существует`);
+		// toast.error(`пользователь ${userData.username} уже существует`);
+		console.log(`пользователь ${userData.username} уже существует`);
 	}
 
 	if (data && data.length > 0) {
 		toast.success(`Пользователь ${data[0].username} успешно добавлен`);
+		console.log(`Пользователь ${data[0].username} успешно добавлен`);
 		return data[0];
 	}
 

@@ -3,7 +3,7 @@ import { Box, TextField, Button, IconButton, Card, CardActions, CardHeader, Card
 import SendIcon from "@mui/icons-material/Send";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EmojiIcon from "@mui/icons-material/InsertEmoticon";
-import { sendImg, sendMessage } from "../../lib/sendMessageToSupabase";
+import { sendImg, sendMessage } from "../../lib/supabaseUtils";
 import { useAuthUserStore } from "../../lib/zustand";
 import { authButton, mainText } from "../../lib/colorsConst";
 
@@ -14,11 +14,13 @@ import { useChatState } from "../../lib/useChatState";
 
 // инпут со всеми кнопками, логикой, и textarea
 
-const MessageInput = ({ setOpenMessageInput = false, chatId }) => {
-	const { selectedFile, setSelectedFile, isLoading, message, setMessage, showPicker, setShowPicker } = useChatState();
+const MessageInput = ({ type, setOpenMessageInput = false, chatId }) => {
+	const { selectedFile, setSelectedFile, isLoading, setIsLoading, message, setMessage, showPicker, setShowPicker } =
+		useChatState();
 	const { authUser } = useAuthUserStore();
 
 	const handleSend = async () => {
+		setIsLoading(true);
 		if (!message.trim() && !selectedFile) return;
 		setShowPicker(false);
 		setOpenMessageInput && setOpenMessageInput(false);
@@ -31,7 +33,8 @@ const MessageInput = ({ setOpenMessageInput = false, chatId }) => {
 					// 1. Сначала дожидаемся загрузки изображения
 					const img = await sendImg(authUser.id, selectedFile);
 					// 2. Только после получения URL отправляем сообщение
-					await sendMessage(chatId, authUser.id, message, img);
+					console.log("message", message, type, chatId, authUser.id);
+					await sendMessage(type, chatId, authUser.id, message, img);
 					// 3. Очищаем поле ввода
 					setMessage("");
 					setSelectedFile(null); // Не забудьте сбросить файл
@@ -41,13 +44,13 @@ const MessageInput = ({ setOpenMessageInput = false, chatId }) => {
 				}
 				// удалять изображение вместе с сообщением
 			} else {
-				sendMessage(chatId, authUser.id, message);
+				sendMessage(type, chatId, authUser.id, message);
 				setMessage("");
 			}
 		} catch (error) {
 			console.error("Ошибка отправки:", error);
 		} finally {
-			// setIsLoading(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -126,7 +129,7 @@ const MessageInput = ({ setOpenMessageInput = false, chatId }) => {
 					</Box>
 					<Fab
 						onClick={handleSend}
-						disabled={isLoading}
+						disabled={false}
 						sx={{
 							borderRadius: "50%",
 							minWidth: "48px",

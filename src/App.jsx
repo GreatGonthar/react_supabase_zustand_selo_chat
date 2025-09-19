@@ -1,25 +1,26 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Button, Container, Typography } from "@mui/material";
 import MainLayout from "./components/MainLayout/MainLayout";
-import LoginPage from "./components/LoginPage/LoginPage";
+
 import UsersListPage from "./components/UsersListPage/UsersListPage";
 import UserPage from "./components/UserPage/UserPage";
 import RandomComponent from "./components/RandomComponent/RandomComponent";
-import BoardMessages from "./components/BoardMessages/BoardMessages";
-import ChatPage from "./components/MessagesPage/ChatPage";
+import PostMessages from "./components/Posts/PostMessages";
+import ChatLayout from "./components/MessagesPage/ChatLayout";
 import ChatList from "./components/MessagesPage/ChatList";
 import Notification from "./components/Notification/Notification";
 import { AuthCallbackPage } from "./components/LoginPage/AuthCallbackPage";
 import { useEffect } from "react";
 import { useAuthUserStore } from "./lib/zustand";
 import { supabase } from "./lib/supabase";
-import { useFetchUsersFromSupabase } from "./lib/useFetchUsersFromSupabase";
+import { useUsersSubscribe } from "./lib/supabaseSubscribers/useUsersSubscribe";
 import { authButton } from "./lib/colorsConst";
+import OnePost from "./components/Posts/OnePost";
 
 const App = () => {
 	const setUser = useAuthUserStore((state) => state.setAuthUser);
 	const setLoading = useAuthUserStore((state) => state.setLoading);
-	const { loading } = useFetchUsersFromSupabase();
+	const { loading } = useUsersSubscribe();
 	useEffect(() => {
 		// 1. Проверяем существующую сессию при загрузке
 		const initializeAuth = async () => {
@@ -81,9 +82,9 @@ const App = () => {
 							<Route path={`/user/:params`} element={<UserPage />} />
 							<Route path="/users" element={<UsersListPage />} />
 							<Route path="/chats" element={<ChatList />} />
-							<Route path="/chat/:params" element={<ChatPage />} />
-							<Route path="/public" element={<BoardMessages />} />
-							<Route path="/login" element={<LoginPage />} />
+							<Route path="/chat/:params" element={<ChatLayout />} />
+							<Route path="/public" element={<PostMessages />} />
+							<Route path="/public/:params" element={<OnePost />} />
 							<Route path="*" element={<RandomComponent content={"404 страница не найдена"} />} />
 							<Route path="/auth/callback" element={<AuthCallbackPage />} />
 						</Routes>

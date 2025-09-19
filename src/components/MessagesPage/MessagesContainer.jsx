@@ -1,23 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
-import MessageItem from "./MessageItem";
-import { useAuthUserStore, useChangeUserStore, useChatsStore } from "../../lib/zustand";
-import { useFetchMessagesFromSupabase } from "../../lib/useFetchMessagesFromSupabase";
-
-import ImagePreview from "./ImagePreview";
-import PickerComponent from "./PickerComponent";
+import MessageBubble from "./MessageBubble";
+import { useAuthUserStore, useChatsStore } from "../../lib/zustand";
+import { useMessagesSubscribe } from "../../lib/supabaseSubscribers/useMessagesSubscribe";
 import { useChatState } from "../../lib/useChatState";
 import { authButton } from "../../lib/colorsConst";
 
 //сдесь показываются сообщения списком
-const ChatInterface = ({ chatId }) => {
+const MessagesContainer = ({ chatId }) => {
 	const { selectedFile, showPicker } = useChatState();
 	const { authUser } = useAuthUserStore();
-	const { changeUser } = useChangeUserStore();
+
 	const { chats } = useChatsStore();
 	const endOfMessagesRef = useRef(null);
 	// Подписываемся на обновления сообщений
-	useFetchMessagesFromSupabase(chatId);
+	useMessagesSubscribe(chatId);
 
 	// Получаем сообщения для текущего чата
 	const messages = chats[chatId] || [];
@@ -57,9 +54,7 @@ const ChatInterface = ({ chatId }) => {
 					</Typography>
 				</Box>
 			) : (
-				messages.map((message) => (
-					<MessageItem key={message.id} message={message} authUser={authUser} changeUser={changeUser} />
-				))
+				messages.map((message) => <MessageBubble message={message} authUser={authUser} key={message.id} />)
 			)}
 
 			<div ref={endOfMessagesRef} />
@@ -67,4 +62,4 @@ const ChatInterface = ({ chatId }) => {
 	);
 };
 
-export default ChatInterface;
+export default MessagesContainer;

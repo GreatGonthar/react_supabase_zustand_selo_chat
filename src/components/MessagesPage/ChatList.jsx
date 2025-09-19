@@ -1,14 +1,6 @@
 import { Grid, Avatar, Typography, Card, CardHeader, AvatarGroup } from "@mui/material";
 import { Link } from "react-router-dom";
-import {
-	useAuthUserStore,
-	useChangeUserStore,
-	useChatsParticipantsStore,
-	useChatsStore,
-	useUsersStore,
-} from "../../lib/zustand";
-
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useAuthUserStore, useChatsParticipantsStore, useChatsStore, useUsersStore } from "../../lib/zustand";
 import { authButton, mainButton, mainText, secondaryText2 } from "../../lib/colorsConst";
 
 import { useChatsWithData } from "../../lib/useChatsWithData";
@@ -18,11 +10,10 @@ const ChatList = () => {
 	// Получаем данные из хранилищ
 	const { users } = useUsersStore();
 	const { authUser } = useAuthUserStore();
-	const { setChangeUser } = useChangeUserStore();
 	const { loading, error } = useChatsWithData(authUser.id);
 	const { chatsParticipants } = useChatsParticipantsStore();
+
 	const chats = chatsParticipants;
-	console.log("chats", chats);
 
 	if (loading) {
 		return <Typography sx={{ mt: 2, ml: 2, color: authButton }}>загрузка чатов...</Typography>;
@@ -48,6 +39,7 @@ const ChatList = () => {
 		<Grid container spacing={1} sx={{ flexDirection: "column", p: 0 }}>
 			{chats &&
 				chats.map((elem) => {
+					console.log("elem", elem);
 					return (
 						<Grid item key={elem.lastMessage.chat_id}>
 							<Link
@@ -99,6 +91,6 @@ const ChatList = () => {
 	);
 };
 
-ChatList.displayName = "ChatList";
+// ChatList.displayName = "ChatList";
 
 export default ChatList;

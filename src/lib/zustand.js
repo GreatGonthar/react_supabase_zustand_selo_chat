@@ -55,10 +55,9 @@ export const useChatsStore = create((set) => ({
 			};
 		}),
 }));
-export const usePostsStore = create((set) => ({
-	posts: [], // Структура: Post[]
-
-	// Установить все посты (загрузка из БД)
+export const usePostsStore = create((set, get) => ({
+	posts: [],
+	reactions: {}, // { [post_id]: { likes: number, dislikes: number } }
 	setPosts: (posts) => {
 		console.log("добавлены в zustand все посты");
 		set({ posts });
@@ -84,20 +83,66 @@ export const usePostsStore = create((set) => ({
 			posts: state.posts.filter((post) => post.id !== postId),
 		})),
 
-	// Лайк/анлайк поста
-	toggleLike: (postId, userId) =>
+	setReactions: (postId, reactions) =>
 		set((state) => ({
-			posts: state.posts.map((post) => {
-				if (post.id !== postId) return post;
-
-				const isLiked = post.likes?.includes(userId);
-				return {
-					...post,
-					likes: isLiked ? post.likes.filter((id) => id !== userId) : [...(post.likes || []), userId],
-					likes_count: isLiked ? post.likes_count - 1 : post.likes_count + 1,
-				};
-			}),
+			reactions: {
+				...state.reactions,
+				[postId]: reactions,
+			},
 		})),
+
+	getReactions: (postId) => {
+		return get().reactions[postId] || { likes: 0, dislikes: 0 };
+	},
+}));
+
+export const useCommentsStore = create((set) => ({
+	comments: {},
+	commentsCount: {},
+	setComments: (postId, commentsArray) => {
+		set((state) => ({
+			comments: {
+				...state.comments,
+				[postId]: commentsArray || [],
+			},
+			commentsCount: {
+				...state.commentsCount,
+				[postId]: commentsArray?.length || 0,
+			},
+		}));
+	},
+	addComment: (postId, newComment) => {
+		set((state) => ({
+			comments: {
+				...state.comments,
+				[postId]: [newComment, ...(state.comments[postId] || [])],
+			},
+			commentsCount: {
+				...state.commentsCount,
+				[postId]: state.commentsCount[postId] + 1,
+			},
+		}));
+	},
+	removeComment: (postId, commentId) => {
+		set((state) => ({
+			comments: {
+				...state.comments,
+				[postId]: (state.comments[postId] || []).filter((comment) => comment.id !== commentId),
+			},
+			commentsCount: {
+				...state.commentsCount,
+				[postId]: Math.max(0, state.commentsCount[postId] - 1),
+			},
+		}));
+	},
+	setCommentsCount: (postId, count) => {
+		set((state) => ({
+			commentsCount: {
+				...state.commentsCount,
+				[postId]: count,
+			},
+		}));
+	},
 }));
 
 export const useAuthUserStore = create((set, get) => ({
@@ -114,12 +159,4 @@ export const useAuthUserStore = create((set, get) => ({
 	setLoading: (isLoading) => set({ isLoading }),
 	// Добавляем селектор для получения только id пользователя
 	getUserId: () => get().authUser?.id,
-}));
-
-export const useChangeUserStore = create((set) => ({
-	changeUser: {},
-
-	setChangeUser: (user) => {
-		set((state) => ({ changeUser: user }));
-	},
 }));

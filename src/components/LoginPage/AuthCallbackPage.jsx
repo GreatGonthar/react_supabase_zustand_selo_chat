@@ -15,7 +15,7 @@ export const AuthCallbackPage = () => {
 				navigate(`/user/${user.id}`); // Перенаправляем после успеха
 			} catch (error) {
 				console.error(error);
-				navigate("/login?error=auth_failed");
+				navigate("/?error=auth_failed");
 			}
 		};
 

@@ -6,14 +6,15 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import PersonIcon from "@mui/icons-material/Person";
 import { Box } from "@mui/material";
-import { useAuthUserStore, useChangeUserStore, useChatsStore, useUsersStore } from "../../lib/zustand";
+import { useAuthUserStore, useUsersStore } from "../../lib/zustand";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { createChat } from "../../lib/sendMessageToSupabase";
+import { createChat } from "../../lib/supabaseUtils";
 import { authButton, hover, links, mainButton, mainText, secondaryText, secondaryText2 } from "../../lib/colorsConst";
+import { handleLogout } from "../../lib/handleGoogleAuth";
 
 const UserPage = () => {
-	const { authUser } = useAuthUserStore();
+	const { authUser, setAuthUser } = useAuthUserStore();
 	const { users } = useUsersStore();
 	const params = useParams().params;
 	const navigate = useNavigate();
@@ -21,8 +22,9 @@ const UserPage = () => {
 		const chatId = await createChat(authUser.id, params);
 		navigate(`/chat/${chatId}`);
 	};
-	const handleLogOut = () => {
-		navigate(`/login`);
+	const logOut = () => {
+		handleLogout();
+		setAuthUser(null);
 	};
 	const handlePublics = () => {
 		navigate(`/public`);
@@ -59,7 +61,7 @@ const UserPage = () => {
 							</Button>
 						) : (
 							authUser && (
-								<Button size="small" onClick={handleLogOut} sx={{ color: links }}>
+								<Button size="small" onClick={logOut} sx={{ color: links }}>
 									выйти
 								</Button>
 							)
